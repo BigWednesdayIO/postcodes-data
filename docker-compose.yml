@@ -1,0 +1,18 @@
+gclouddatastore:
+  image: risaacson/gcd-local:v1beta2-rev1-3.0.0
+  environment:
+    - PROJ_ID=postcodes
+    - CONSISTENCY=1.0
+  ports:
+    - '8080'
+importer:
+  build: .
+  links:
+    - gclouddatastore
+  volumes:
+    - .:/usr/importer
+  environment:
+    - DATASTORE_HOST=http://gclouddatastore:8080
+    - DATASTORE_DATASET=postcodes
+    - GCLOUD_PROJECT_ID=postcodes
+    - GCLOUD_KEY=ewogICJwcml2YXRlX2tleV9pZCI6ICIxMjM0NSIsCiAgInByaXZhdGVfa2V5IjogIi0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuMTIzNDU2Nzg5XG4tLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tXG4iLAogICJjbGllbnRfZW1haWwiOiAiMTIzLmRldmVsb3Blci5nc2VydmljZWFjY291bnQuY29tIiwKICAiY2xpZW50X2lkIjogIjEyMy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsCiAgInR5cGUiOiAic2VydmljZV9hY2NvdW50Igp9Cg==
