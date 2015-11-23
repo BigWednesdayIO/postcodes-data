@@ -14,7 +14,7 @@ const csvIndexes = {
   county: 24,
   region: 27,
   country: 29
-}
+};
 
 const projectId = process.env.GCLOUD_PROJECT_ID;
 const credentials = process.env.GCLOUD_KEY;
@@ -26,7 +26,7 @@ const dataset = gcloud.datastore.dataset({
 
 const isPostCodeRecord = record => {
   return record[csvIndexes.type].toLowerCase() === 'postcode';
-}
+};
 
 const onlyPostcodes = function (data, enc, callback) {
   if (isPostCodeRecord(data)) {
@@ -36,20 +36,23 @@ const onlyPostcodes = function (data, enc, callback) {
   callback();
 };
 
-const toDatastoreRecord = function(data, enc, callback) {
-  const key = dataset.key(['Postcode', data[csvIndexes.postcode]]);
+const toDatastoreRecord = function (file) {
+  return function(data, enc, callback) {
+    const key = dataset.key(['Postcode', data[csvIndexes.postcode]]);
 
-  const record = {
-    postcode: data[csvIndexes.postcode],
-    populated_place: data[csvIndexes.populated_place],
-    district: data[csvIndexes.district],
-    county: data[csvIndexes.county],
-    region: data[csvIndexes.region],
-    country: data[csvIndexes.country]
+    const record = {
+      postcode: data[csvIndexes.postcode],
+      populated_place: data[csvIndexes.populated_place],
+      district: data[csvIndexes.district],
+      county: data[csvIndexes.county],
+      region: data[csvIndexes.region],
+      country: data[csvIndexes.country],
+      _sourcefile: file
+    };
+
+    callback(null, {key, data: record});
   };
-
-  callback(null, {key, data: record});
-}
+};
 
 let batch = [];
 const batchSize = 30;
@@ -88,9 +91,7 @@ const addToDatastore = function (data, enc, callback) {
   });
 };
 
-let result = Promise.resolve(resolve => {
-  dataset.del
-});
+let result = Promise.resolve({});
 
 glob('/var/lib/opennames/**/DATA/*.csv', (err, files) => {
   files.forEach(file => {
@@ -101,7 +102,7 @@ glob('/var/lib/opennames/**/DATA/*.csv', (err, files) => {
         fs.createReadStream(file)
           .pipe(parse())
           .pipe(through2.obj(onlyPostcodes))
-          .pipe(through2.obj(toDatastoreRecord))
+          .pipe(through2.obj(toDatastoreRecord(file)))
           .pipe(through2.obj(toDatastoreBatch, flushDatastoreBatch))
           .pipe(through2.obj(addToDatastore, function (callback) {
             console.log(`Finished import from ${file}`);
