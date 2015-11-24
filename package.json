@@ -1,0 +1,26 @@
+{
+  "name": "postcodes-data-importer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigWednesdayIO/postcodes-data-importer.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/BigWednesdayIO/postcodes-data-importer/issues"
+  },
+  "homepage": "https://github.com/BigWednesdayIO/postcodes-data-importer#readme",
+  "dependencies": {
+    "csv-parse": "^1.0.0",
+    "gcloud": "^0.25.0",
+    "glob": "^6.0.1",
+    "through2": "^2.0.0"
+  }
+}
