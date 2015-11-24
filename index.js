@@ -55,7 +55,7 @@ const toDatastoreRecord = function (file) {
 };
 
 let batch = [];
-const batchSize = 30;
+const batchSize = 50;
 
 const toDatastoreBatch = function (data, enc, callback) {
   batch.push(data);
