@@ -58,10 +58,10 @@ let batch = [];
 const batchSize = 30;
 
 const toDatastoreBatch = function (data, enc, callback) {
-  if (batch.length < batchSize) {
-    batch.push(data);
-    this.push(batch);
+  batch.push(data);
 
+  if (batch.length === batchSize) {
+    this.push(batch);
     batch = [];
   }
 
