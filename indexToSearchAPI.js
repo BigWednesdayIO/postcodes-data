@@ -83,11 +83,39 @@ const indexEntityField = field => {
   });
 };
 
-indexEntityField('country')
-  .then(() => indexEntityField('region'))
-  .then(() => indexEntityField('county'))
-  .then(() => indexEntityField('district'))
-  .then(() => indexEntityField('place'))
-  .catch(err => {
-    console.error(err);
-  });
+new Promise((resolve, reject) => {
+  console.log('Adding index settings');
+
+  request({
+    url: `${process.env.SEARCH_API}/indexes/orderable-delivery-locations-tmp/settings`,
+    method: 'PUT',
+    json: {searchable_fields: ['location'], facets: []},
+    headers: {
+      authorization: `Bearer ${process.env.SEARCH_API_TOKEN}`
+    }
+  }, (err, response, body) => {
+    if (err) {
+      const error = new Error('Index settings error');
+      error.internal = err;
+
+      return reject(error);
+    }
+
+    if (response.statusCode != 200) {
+      const error = new Error('Index settings error');
+      error.http_response = body;
+
+      return reject(error);
+    }
+
+    resolve();
+  })
+})
+.then(() => indexEntityField('country'))
+.then(() => indexEntityField('region'))
+.then(() => indexEntityField('county'))
+.then(() => indexEntityField('district'))
+.then(() => indexEntityField('place'))
+.catch(err => {
+  console.error(err);
+});
