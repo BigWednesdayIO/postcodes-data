@@ -42,7 +42,7 @@ const toDatastoreRecord = function (file) {
 
     const record = {
       postcode: data[csvIndexes.postcode],
-      populated_place: data[csvIndexes.populated_place],
+      place: data[csvIndexes.populated_place],
       district: data[csvIndexes.district],
       county: data[csvIndexes.county],
       region: data[csvIndexes.region],
@@ -55,7 +55,7 @@ const toDatastoreRecord = function (file) {
 };
 
 let batch = [];
-const batchSize = 30;
+const batchSize = 50;
 
 const toDatastoreBatch = function (data, enc, callback) {
   batch.push(data);
