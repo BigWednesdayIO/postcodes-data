@@ -36,7 +36,7 @@ const flushBatch = function (callback) {
 
 const indexBatch = (batch, enc, callback) => {
   request({
-    url: `${process.env.SEARCH_API}/indexes/orderable-locations-tmp/batch`,
+    url: `${process.env.SEARCH_API}/indexes/orderable-delivery-locations-tmp/batch`,
     method: 'POST',
     json: {requests: batch.map(body => ({action: 'create', body}))},
     headers: {
