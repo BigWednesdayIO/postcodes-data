@@ -35,6 +35,7 @@ const flushBatch = function (callback) {
 };
 
 const indexBatch = (batch, enc, callback) => {
+  // send to -tmp index to avoid overwriting a live/in-use index. The -tmp index can be moved after testing.
   request({
     url: `${process.env.SEARCH_API}/indexes/orderable-delivery-locations-tmp/batch`,
     method: 'POST',
