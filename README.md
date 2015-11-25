@@ -23,4 +23,5 @@ docker run \
 ### Optional commands
 
 `npm run import` to perform datastore import only (SEARCH_API variables not required)
+
 `npm run index` to perform search indexing only (GCLOUD variables still required)
