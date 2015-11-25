@@ -78,13 +78,10 @@ const flushDatastoreBatch = function (callback) {
 
 const addToDatastore = function (data, enc, callback) {
   dataset.save(data, err => {
-    if (err && err.message.indexOf('too long to respond') >= 0) {
-      console.log('Datastore save timed out. Retrying.');
-      return addToDatastore(data, enc, callback);
-    }
-
     if (err) {
-      return callback(err);
+      console.error(err);
+      console.log('Datastore error. Retrying');
+      return addToDatastore(data, enc, callback);
     }
 
     callback();
