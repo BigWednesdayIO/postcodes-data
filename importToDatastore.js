@@ -69,12 +69,21 @@ const flushDatastoreBatch = function (callback) {
   callback();
 };
 
-const addToDatastore = function (data, enc, callback) {
+const addToDatastore = function (data, enc, callback, attempts) {
+  attempts = attempts || 0;
+
   datastore.dataset.save(data, err => {
     if (err) {
-      console.error(err);
-      console.log('Datastore error. Retrying');
-      return addToDatastore(data, enc, callback);
+      console.error('Datastore error.', err);
+
+      if (attempts < 3) {
+        attempts++;
+        console.log(`Retrying [${attempts}].`);
+        return addToDatastore(data, enc, callback, attempts);
+      }
+      else {
+        return callback(err);
+      }
     }
 
     callback();

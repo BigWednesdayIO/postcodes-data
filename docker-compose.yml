@@ -10,7 +10,7 @@ importer:
   links:
     - gclouddatastore
   volumes:
-    - .:/usr/importer
+    - .:/usr/local/importer
   environment:
     - DATASTORE_HOST=http://gclouddatastore:8080
     - GCLOUD_PROJECT_ID=postcodes

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run import && npm run index",
-    "import": "node importToDatstore.js",
+    "import": "node importToDatastore.js",
     "index": "node indexToSearchAPI.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
