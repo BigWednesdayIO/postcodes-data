@@ -10,9 +10,11 @@ importer:
   links:
     - gclouddatastore
   volumes:
-    - .:/usr/importer
+    - .:/usr/local/importer
   environment:
     - DATASTORE_HOST=http://gclouddatastore:8080
     - GCLOUD_PROJECT_ID=postcodes
     - GCLOUD_KEY=ewogICJwcml2YXRlX2tleV9pZCI6ICIxMjM0NSIsCiAgInByaXZhdGVfa2V5IjogIi0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuMTIzNDU2Nzg5XG4tLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tXG4iLAogICJjbGllbnRfZW1haWwiOiAiMTIzLmRldmVsb3Blci5nc2VydmljZWFjY291bnQuY29tIiwKICAiY2xpZW50X2lkIjogIjEyMy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsCiAgInR5cGUiOiAic2VydmljZV9hY2NvdW50Igp9Cg==
+    - SEARCH_API=https://nzgrud6b.bigwednesday.io/1
+    - SEARCH_API_TOKEN=8N*b3i[EX[s*zQ%
   command: bash -c "npm install && npm start"

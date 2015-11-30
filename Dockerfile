@@ -10,9 +10,9 @@ RUN cd /var/lib && \
     cd opennames && \
     for i in *.zip; do target="${i%.zip}" && mkdir "$target" && unzip "$i" -d "$target" && rm "$i"; done
 
-COPY . /usr/importer
+COPY . /usr/local/importer
 
-WORKDIR /usr/importer
+WORKDIR /usr/local/importer
 
 RUN npm install
 

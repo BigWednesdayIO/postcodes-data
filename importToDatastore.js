@@ -1,10 +1,11 @@
 'use strict';
 
 const fs = require('fs');
-const gcloud = require('gcloud');
 const glob = require('glob');
 const parse = require('csv-parse');
 const through2 = require('through2');
+
+const datastore = require('./lib/datastore');
 
 const csvIndexes = {
   postcode: 0,
@@ -15,14 +16,6 @@ const csvIndexes = {
   region: 27,
   country: 29
 };
-
-const projectId = process.env.GCLOUD_PROJECT_ID;
-const credentials = process.env.GCLOUD_KEY;
-
-const dataset = gcloud.datastore.dataset({
-  projectId,
-  credentials: JSON.parse(new Buffer(credentials, 'base64').toString('ascii'))
-});
 
 const isPostCodeRecord = record => {
   return record[csvIndexes.type].toLowerCase() === 'postcode';
@@ -38,7 +31,7 @@ const onlyPostcodes = function (data, enc, callback) {
 
 const toDatastoreRecord = function (file) {
   return function(data, enc, callback) {
-    const key = dataset.key(['Postcode', data[csvIndexes.postcode]]);
+    const key = datastore.dataset.key([datastore.kind, data[csvIndexes.postcode]]);
 
     const record = {
       postcode: data[csvIndexes.postcode],
@@ -76,15 +69,21 @@ const flushDatastoreBatch = function (callback) {
   callback();
 };
 
-const addToDatastore = function (data, enc, callback) {
-  dataset.save(data, err => {
-    if (err && err.message.indexOf('too long to respond') >= 0) {
-      console.log('Datastore save timed out. Retrying.');
-      return addToDatastore(data, enc, callback);
-    }
+const addToDatastore = function (data, enc, callback, attempts) {
+  attempts = attempts || 0;
 
+  datastore.dataset.save(data, err => {
     if (err) {
-      return callback(err);
+      console.error('Datastore error.', err);
+
+      if (attempts < 3) {
+        attempts++;
+        console.log(`Retrying [${attempts}].`);
+        return addToDatastore(data, enc, callback, attempts);
+      }
+      else {
+        return callback(err);
+      }
     }
 
     callback();
